@@ -12,7 +12,10 @@ myvideo.autoplay = true
 
 myvideo.style = 'transform: rotateY(180deg);'
 
+myvideo.muted = true;
+
 myvideo.srcObject = selfStream
+
 
 document.body.appendChild(myvideo)
 
