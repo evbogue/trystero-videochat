@@ -1,4 +1,13 @@
+import { h } from './h.js'
 import { trystero } from './trystero.js'
+
+document.body.style ='margin: 0;'
+
+const container = h('div', {
+  style: 'display: flex; flex-direction: row; flex-wrap: wrap; max-height: 100vw; max-width: 100vw; margin: 0;'
+})
+
+document.body.appendChild(container)
 
 trystero.connect({appId: 'trytrysterovideo1', password: 'password'})
 
@@ -7,17 +16,16 @@ const selfStream = await navigator.mediaDevices.getUserMedia({
   video: true
 })
 
-const myvideo = document.createElement('video')
-myvideo.autoplay = true
+const myvideo = h('video', {
+  autoplay: true, 
+  style: 'transform: rotateY(180deg); height: auto; width: 100%; object-fit: cover;', 
+  muted: true, 
+  srcObject: selfStream
+})
 
-myvideo.style = 'transform: rotateY(180deg);'
+const mycontainer = h('div', {style: 'width: 25vw; height: 25vw; display: flex; position: fixed;' }, [myvideo])
 
-myvideo.muted = true;
-
-myvideo.srcObject = selfStream
-
-
-document.body.appendChild(myvideo)
+container.appendChild(mycontainer)
 
 trystero.addstream(selfStream)
 
@@ -29,9 +37,15 @@ trystero.leave(peerId => {
 })
 
 trystero.onstream((stream, peerId) => {
-  const video = document.createElement('video')
-  video.id = peerId
-  video.autoplay = true
-  video.srcObject = stream
-  document.body.appendChild(video)
+  const video = h('video', {
+    autoplay: true,
+    srcObject: stream, 
+    style: 'height: auto; width: 100%; object-fit: cover;'   
+  })
+
+  const videocontainer = h('div', {
+    id: peerId,
+    style: 'width: 100vw; height: 100vw; display: flex;' 
+  }, [video])
+  container.appendChild(videocontainer)
 })
